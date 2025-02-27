@@ -8,8 +8,8 @@ import {
   fetch,
   fetchStatus,
   kind,
-} from "pepr";
-import { MockAgent, setGlobalDispatcher } from "undici";
+} from "pepr"
+import { MockAgent, setGlobalDispatcher } from "undici"
 
 /**
  *  The HelloPepr Capability is an example capability to demonstrate some general concepts of Pepr.
@@ -20,10 +20,10 @@ export const HelloPepr = new Capability({
   name: "hello-pepr",
   description: "A simple example capability to show how things work.",
   namespaces: ["pepr-demo", "pepr-demo-2"],
-});
+})
 
 // Use the 'When' function to create a new action, use 'Store' to persist data
-const { When, Store } = HelloPepr;
+const { When, Store } = HelloPepr
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ const { When, Store } = HelloPepr;
  */
 When(a.Namespace)
   .IsCreated()
-  .Mutate(ns => ns.RemoveLabel("remove-me"));
+  .Mutate(ns => ns.RemoveLabel("remove-me"))
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ When(a.Namespace)
   .IsCreated()
   .WithName("pepr-demo-2")
   .Watch(async ns => {
-    Log.info("Namespace pepr-demo-2 was created.");
+    Log.info("Namespace pepr-demo-2 was created.")
 
     try {
       // Apply the ConfigMap using K8s server-side apply
@@ -63,15 +63,15 @@ When(a.Namespace)
         data: {
           "ns-uid": ns.metadata.uid,
         },
-      });
+      })
     } catch (error) {
       // You can use the Log object to log messages to the Pepr controller pod
-      Log.error(error, "Failed to apply ConfigMap using server-side apply.");
+      Log.error(error, "Failed to apply ConfigMap using server-side apply.")
     }
 
     // You can share data between actions using the Store, including between different types of actions
-    Store.setItem("watch-data", "This data was stored by a Watch Action.");
-  });
+    Store.setItem("watch-data", "This data was stored by a Watch Action.")
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -91,14 +91,14 @@ When(a.ConfigMap)
   .Mutate(request => {
     request
       .SetLabel("pepr", "was-here")
-      .SetAnnotation("pepr.dev", "annotations-work-too");
+      .SetAnnotation("pepr.dev", "annotations-work-too")
 
     // Use the Store to persist data between requests and Pepr controller pods
-    Store.setItem("example-1", "was-here");
+    Store.setItem("example-1", "was-here")
 
     // This data is written asynchronously and can be read back via `Store.getItem()` or `Store.subscribe()`
-    Store.setItem("example-1-data", JSON.stringify(request.Raw.data));
-  });
+    Store.setItem("example-1-data", JSON.stringify(request.Raw.data))
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -126,23 +126,23 @@ When(a.ConfigMap)
           "pepr.dev": "annotations-work-too",
         },
       },
-    });
+    })
   })
   .Validate(request => {
     // This Validate Action will validate the request before it is persisted to the cluster
 
     // Approve the request if the ConfigMap has the label 'pepr'
     if (request.HasLabel("pepr")) {
-      return request.Approve();
+      return request.Approve()
     }
 
     // Otherwise, deny the request with an error message (optional)
-    return request.Deny("ConfigMap must have label 'pepr'");
+    return request.Deny("ConfigMap must have label 'pepr'")
   })
   .Watch((cm, phase) => {
     // This Watch Action will watch the ConfigMap after it has been persisted to the cluster
-    Log.info(cm, `ConfigMap was ${phase} with the name example-2`);
-  });
+    Log.info(cm, `ConfigMap was ${phase} with the name example-2`)
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -157,11 +157,11 @@ When(a.ConfigMap)
   .IsCreated()
   .Validate(request => {
     if (request.HasAnnotation("evil")) {
-      return request.Deny("No evil CM annotations allowed.", 400);
+      return request.Deny("No evil CM annotations allowed.", 400)
     }
 
-    return request.Approve();
-  });
+    return request.Approve()
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -178,18 +178,18 @@ When(a.ConfigMap)
   .WithLabel("change", "by-label")
   .Mutate(request => {
     // The K8s object e are going to mutate
-    const cm = request.Raw;
+    const cm = request.Raw
 
     // Get the username and uid of the K8s request
-    const { username, uid } = request.Request.userInfo;
+    const { username, uid } = request.Request.userInfo
 
     // Store some data about the request in the configmap
-    cm.data["username"] = username;
-    cm.data["uid"] = uid;
+    cm.data["username"] = username
+    cm.data["uid"] = uid
 
     // You can still mix other ways of making changes too
-    request.SetAnnotation("pepr.dev", "making-waves");
-  });
+    request.SetAnnotation("pepr.dev", "making-waves")
+  })
 
 // This action validates the label `change=by-label` is deleted
 When(a.ConfigMap)
@@ -197,9 +197,9 @@ When(a.ConfigMap)
   .WithLabel("change", "by-label")
   .Validate(request => {
     // Log and then always approve the request
-    Log.info("CM with label 'change=by-label' was deleted.");
-    return request.Approve();
-  });
+    Log.info("CM with label 'change=by-label' was deleted.")
+    return request.Approve()
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -210,13 +210,13 @@ When(a.ConfigMap)
  * This is useful if you want to keep your actions small and focused on a single task,
  * or if you want to reuse the same function in multiple actions.
  */
-When(a.ConfigMap).IsCreated().WithName("example-4").Mutate(example4Cb);
+When(a.ConfigMap).IsCreated().WithName("example-4").Mutate(example4Cb)
 
 // This function uses the complete type definition, but is not required.
 function example4Cb(cm: PeprMutateRequest<a.ConfigMap>) {
-  cm.SetLabel("pepr.dev/first", "true");
-  cm.SetLabel("pepr.dev/second", "true");
-  cm.SetLabel("pepr.dev/third", "true");
+  cm.SetLabel("pepr.dev/first", "true")
+  cm.SetLabel("pepr.dev/second", "true")
+  cm.SetLabel("pepr.dev/third", "true")
 }
 
 /**
@@ -232,7 +232,7 @@ When(a.ConfigMap)
   .IsCreated()
   .InNamespace("pepr-demo-2")
   .WithName("example-4a")
-  .Mutate(example4Cb);
+  .Mutate(example4Cb)
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -263,9 +263,9 @@ When(a.ConfigMap)
  * ```
  */
 interface TheChuckNorrisJoke {
-  id: string;
-  joke: string;
-  status: number;
+  id: string
+  joke: string
+  status: number
 }
 
 When(a.ConfigMap)
@@ -273,11 +273,11 @@ When(a.ConfigMap)
   .WithLabel("chuck-norris")
   .Mutate(cm => cm.SetLabel("got-jokes", "true"))
   .Watch(async cm => {
-    const jokeURL = "https://icanhazdadjoke.com";
+    const jokeURL = "https://icanhazdadjoke.com"
 
-    const mockAgent: MockAgent = new MockAgent();
-    setGlobalDispatcher(mockAgent);
-    const mockClient = mockAgent.get(jokeURL);
+    const mockAgent: MockAgent = new MockAgent()
+    setGlobalDispatcher(mockAgent)
+    const mockClient = mockAgent.get(jokeURL)
     mockClient.intercept({ path: "/", method: "GET" }).reply(
       200,
       {
@@ -290,20 +290,20 @@ When(a.ConfigMap)
           "Content-Type": "application/json; charset=utf-8",
         },
       },
-    );
+    )
 
     // Try/catch is not needed as a response object will always be returned
     const response = await fetch<TheChuckNorrisJoke>(jokeURL, {
       headers: {
         Accept: "application/json",
       },
-    });
+    })
 
     // Instead, check the `response.ok` field
     if (response.ok) {
-      const { joke } = response.data;
+      const { joke } = response.data
       // Add Joke to the Store
-      await Store.setItemAndWait(jokeURL, joke);
+      await Store.setItemAndWait(jokeURL, joke)
       // Add the Chuck Norris joke to the configmap
       try {
         await K8s(kind.ConfigMap).Apply({
@@ -314,20 +314,20 @@ When(a.ConfigMap)
           data: {
             "chuck-says": Store.getItem(jokeURL),
           },
-        });
+        })
       } catch (error) {
         Log.error(error, "Failed to apply ConfigMap using server-side apply.", {
           cm,
-        });
+        })
       }
     }
 
     // You can also assert on different HTTP response codes
     if (response.status === fetchStatus.NOT_FOUND) {
       // Do something else
-      return;
+      return
     }
-  });
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -342,14 +342,14 @@ When(a.Secret)
   .IsCreated()
   .WithName("secret-1")
   .Mutate(request => {
-    const secret = request.Raw;
+    const secret = request.Raw
 
     // This will be encoded at the end of all processing back to base64: "Y2hhbmdlLXdpdGhvdXQtZW5jb2Rpbmc="
-    secret.data.magic = "change-without-encoding";
+    secret.data.magic = "change-without-encoding"
 
     // You can modify the data directly, and it will be encoded at the end of all processing
-    secret.data.example += " - modified by Pepr";
-  });
+    secret.data.example += " - modified by Pepr"
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -393,8 +393,8 @@ When(a.GenericKind, {
         message: "Hello Pepr without type data!",
         counter: Math.random(),
       },
-    });
-  });
+    })
+  })
 
 /**
  * ---------------------------------------------------------------------------------------------------
@@ -433,16 +433,16 @@ class UnicornKind extends a.GenericKind {
      * request.Raw.spec.message = "Hello Pepr!";
      * ```
      * */
-    message: string;
-    counter: number;
-  };
+    message: string
+    counter: number
+  }
 }
 
 RegisterKind(UnicornKind, {
   group: "pepr.dev",
   version: "v1",
   kind: "Unicorn",
-});
+})
 
 When(UnicornKind)
   .IsCreated()
@@ -453,12 +453,12 @@ When(UnicornKind)
         message: "Hello Pepr with type data!",
         counter: Math.random(),
       },
-    });
-  });
+    })
+  })
 
 /**
  * A callback function that is called once the Pepr Store is fully loaded.
  */
 Store.onReady(data => {
-  Log.info(data, "Pepr Store Ready");
-});
+  Log.info(data, "Pepr Store Ready")
+})

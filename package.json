@@ -28,13 +28,26 @@
     "env": {}
   },
   "scripts": {
-    "k3d-setup": "k3d cluster delete pepr-dev && k3d cluster create pepr-dev --k3s-arg '--debug@server:0' --wait && kubectl rollout status deployment -n kube-system"
+    "k3d-setup": "k3d cluster delete pepr-dev && k3d cluster create pepr-dev --k3s-arg '--debug@server:0' --wait && kubectl rollout status deployment -n kube-system",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint .",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "pepr": "0.46.0",
     "undici": "^7.0.1"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^10.0.2",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "typescript": "5.7.3"
   }
 }
