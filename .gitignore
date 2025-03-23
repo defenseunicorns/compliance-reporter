@@ -1,0 +1,47 @@
+
+# Binaries for programs and plugins
+*.log
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin
+testbin/*
+Dockerfile.cross
+pepr
+dist/
+*.js
+*.js.amp
+# Permit these few files to be checked in
+!hack/*.js
+!.github/workflows/*.js
+!scripts/*.js
+node_modules/
+stats.html
+.vscode
+insecure-tls*
+pepr-test-*
+pepr-upgrade-test
+*.tar
+*.tgz
+load/
+coverage/
+.DS_Store
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Kubernetes Generated files - skip generated files, except for vendored files
+
+!vendor/**/zz_generated.*
+
+# editor and IDE paraphernalia
+.idea
+*.swp
+*.swo
+*~
+doug
+Dockerfile.controller
