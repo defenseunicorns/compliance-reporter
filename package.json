@@ -10,24 +10,24 @@
     "node": ">=18.0.0"
   },
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
+  ".": {
+    "import": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  }
+},
   "version": "0.0.0-development",
   "scripts": {
     "k3d-setup": "k3d cluster delete pepr-dev && k3d cluster create pepr-dev --k3s-arg '--debug@server:0' --wait && kubectl rollout status deployment -n kube-system",
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
-    "test": "jest --config=jest.config.js",
+    "test": "jest",
     "test:coverage": "jest --coverage"
   },
   "repository": "defenseunicorns/compliance-reporter",
   "license": "Apache-2.0",
   "devDependencies": {
     "@eslint/js": "^9.23.0",
-    "@types/jest": "^29.5.14",
+    "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
     "eslint": "^9.23.0",
@@ -37,7 +37,7 @@
     "prettier": "^3.2.5",
     "ts-jest": "^29.3.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2",
+    "typescript": "5.8.2",
     "typescript-eslint": "^8.28.0"
   }
 }
