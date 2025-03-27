@@ -20,7 +20,7 @@
     "k3d-setup": "k3d cluster delete pepr-dev && k3d cluster create pepr-dev --k3s-arg '--debug@server:0' --wait && kubectl rollout status deployment -n kube-system",
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
-    "test": "jest",
+    "test": "jest --config=jest.config.js",
     "test:coverage": "jest --coverage"
   },
   "repository": "defenseunicorns/compliance-reporter",
