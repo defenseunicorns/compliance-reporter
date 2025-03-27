@@ -11,7 +11,6 @@ testbin/*
 Dockerfile.cross
 pepr
 dist/
-*.js
 *.js.amp
 # Permit these few files to be checked in
 !hack/*.js
@@ -24,7 +23,6 @@ insecure-tls*
 pepr-test-*
 pepr-upgrade-test
 *.tar
-*.tgz
 load/
 coverage/
 .DS_Store
