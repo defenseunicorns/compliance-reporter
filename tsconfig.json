@@ -10,11 +10,20 @@
       "moduleResolution": "node",
       "outDir": "dist",
       "resolveJsonModule": true,
-      "rootDir": ".",
+      "rootDir": "src",
       "strict": false,
       "target": "ES2022",
       "useUnknownInCatchVariables": false
     },
-    "include": ["**/*.ts"]
+    "include": ["**/*.ts"],
+    "exclude": [
+      "node_modules",
+      "dist",
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      "**/__tests__/*",
+      "**/__mocks__/*",
+      "e2e"
+    ]
   }
   

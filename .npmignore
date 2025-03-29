@@ -4,9 +4,13 @@
 .prettierrc
 .vscode
 adr
+e2e
+*.md
+*.mjs
 /docs/
 /hack
 build.mjs
+jest.config.js
 /journey
 /__mocks__
 /coverage
