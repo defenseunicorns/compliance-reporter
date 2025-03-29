@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "test:unit": "jest --testPathIgnorePatterns=e2e/ --coverage",
-    "build": "tsc && node build.mjs && npm pack"
+    "build": "tsc && node build.mjs && npm pack",
+    "test:e2e": "npm run build && npm i --no-save compliance-reporter-0.0.0-development.tgz && jest e2e/"
   },
   "repository": "defenseunicorns/compliance-reporter",
   "license": "Apache-2.0",
