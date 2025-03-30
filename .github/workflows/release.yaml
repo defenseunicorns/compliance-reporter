@@ -39,6 +39,11 @@ jobs:
 
           npm install -g npm
 
+          npm ci
+
+          # Set the version to the release version
           npm --no-git-tag-version version ${{ github.ref_name }}
+
+          npm run build
           
           PEPR_VERSION=${{ github.ref_name }} npm publish --provenance --access public
