@@ -31,7 +31,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
 
-      - name: Publish to GHCR & NPM
+      - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
@@ -46,4 +46,4 @@ jobs:
 
           npm run build
           
-          PEPR_VERSION=${{ github.ref_name }} npm publish --provenance --access public
+          PEPR_VERSION=${{ github.ref_name }} npm publish
