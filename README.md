@@ -8,7 +8,7 @@ import {
   registerControls,
   generateComplianceReport,
   findComplianceGaps,
-} from "compliance-reporter";
+} from "compliance-reporter"
 
 export const controls = registerControls({
   /** Optional jsdoc will show in IDE intellisense */
@@ -31,17 +31,17 @@ export const controls = registerControls({
     id: "NIST-800-53-6",
     description: "Network Policy",
   },
-});
+})
 
-mapControl(controls.NetworkPolicy, "Implementation details", 75);
-const report = generateComplianceReport();
-const gaps = findComplianceGaps();
+mapControl(controls.NetworkPolicy, "Implementation details", 75)
+const report = generateComplianceReport()
+const gaps = findComplianceGaps()
 
 // Print the report
-console.log("Report: ");
-console.log(JSON.stringify(report, null, 2));
+console.log("Report: ")
+console.log(JSON.stringify(report, null, 2))
 
 // Pretty print the matrix for debugging
-console.log("Matrix: ");
-console.log(JSON.stringify(gaps, null, 2));
+console.log("Matrix: ")
+console.log(JSON.stringify(gaps, null, 2))
 ```

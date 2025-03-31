@@ -1,21 +1,21 @@
-import { ComplianceReport, Control, ControlImplementation } from "./types";
+import { ComplianceReport, Control, ControlImplementation } from "./types"
 
 // Track all registered controls
-const registeredControls: Control[] = [];
+const registeredControls: Control[] = []
 
 // Track all registered control implementations
-const controlImplementations: ControlImplementation[] = [];
+const controlImplementations: ControlImplementation[] = []
 
 // Export for testing purposes
 export const __test__ = {
   registeredControls,
   controlImplementations,
   resetState: () => {
-    registeredControls.length = 0;
-    controlImplementations.length = 0;
+    registeredControls.length = 0
+    controlImplementations.length = 0
   },
   extractCallerInfo,
-};
+}
 
 /**
  * Register one or more compliance controls and return a typed object
@@ -25,11 +25,11 @@ export const __test__ = {
  */
 export function registerControls<T extends Record<string, Control>>(
   controls: T,
-): T;
+): T
 
-export function registerControls(controls: Control): Record<string, Control>;
+export function registerControls(controls: Control): Record<string, Control>
 
-export function registerControls(controls: Control[]): Record<string, Control>;
+export function registerControls(controls: Control[]): Record<string, Control>
 
 export function registerControls(
   controls: Control | Control[] | Record<string, Control>,
@@ -39,34 +39,34 @@ export function registerControls(
     ? controls
     : "id" in controls
       ? [controls as Control]
-      : Object.values(controls);
+      : Object.values(controls)
 
   // Validate and register each control
   for (const control of controlsArray) {
     if (!control.id) {
-      throw new Error("Control must have an ID");
+      throw new Error("Control must have an ID")
     }
 
-    if (registeredControls.some((c) => c.id === control.id)) {
-      throw new Error(`Control ID ${control.id} is already registered`);
+    if (registeredControls.some(c => c.id === control.id)) {
+      throw new Error(`Control ID ${control.id} is already registered`)
     }
 
-    registeredControls.push(control);
+    registeredControls.push(control)
   }
 
   // If the input was an object, return it as is for type preservation
   if (!Array.isArray(controls) && !("id" in controls)) {
-    return controls as Record<string, Control>;
+    return controls as Record<string, Control>
   }
 
   // Otherwise, create a new object from the array
-  const result: Record<string, Control> = {};
+  const result: Record<string, Control> = {}
   for (const control of controlsArray) {
     // Use the ID as the key if we don't have a better name
-    result[control.id] = control;
+    result[control.id] = control
   }
 
-  return result;
+  return result
 }
 
 /**
@@ -104,36 +104,36 @@ export function mapControl(
   // Determine if we're dealing with a Control or a ControlImplementation
   if ("controlId" in controlOrImpl) {
     // It's already a ControlImplementation
-    const impl = controlOrImpl as ControlImplementation;
+    const impl = controlOrImpl as ControlImplementation
 
     // Ensure the control ID exists
-    if (!registeredControls.some((c) => c.id === impl.controlId)) {
-      throw new Error(`Control ID ${impl.controlId} is not registered`);
+    if (!registeredControls.some(c => c.id === impl.controlId)) {
+      throw new Error(`Control ID ${impl.controlId} is not registered`)
     }
 
     // Add the implementation directly
-    controlImplementations.push(impl);
-    return;
+    controlImplementations.push(impl)
+    return
   }
 
   // It's a Control object
-  const control = controlOrImpl;
+  const control = controlOrImpl
 
   // Ensure the control ID exists
-  if (!registeredControls.some((c) => c.id === control.id)) {
-    throw new Error(`Control ID ${control.id} is not registered`);
+  if (!registeredControls.some(c => c.id === control.id)) {
+    throw new Error(`Control ID ${control.id} is not registered`)
   }
 
   // Auto-detect source if not provided
-  let sourceString = source;
+  let sourceString = source
   if (!sourceString) {
     // Capture caller information when possible
-    const stack = new Error().stack || "";
-    const callerInfo = extractCallerInfo(stack);
+    const stack = new Error().stack || ""
+    const callerInfo = extractCallerInfo(stack)
     if (callerInfo.file) {
       sourceString = callerInfo.line
         ? `${callerInfo.file}:${callerInfo.line}`
-        : callerInfo.file;
+        : callerInfo.file
     }
   }
 
@@ -142,7 +142,7 @@ export function mapControl(
     coverage,
     justification: justification || "No justification provided",
     source: sourceString,
-  });
+  })
 }
 
 /**
@@ -152,7 +152,7 @@ export function mapControl(
  */
 export function generateComplianceReport(): ComplianceReport {
   // Initialize the compliance matrix with all controls at 0% coverage
-  const report: ComplianceReport = {};
+  const report: ComplianceReport = {}
 
   // Add all controls to the matrix
   for (const control of registeredControls) {
@@ -160,23 +160,23 @@ export function generateComplianceReport(): ComplianceReport {
       ...control,
       coveragePercent: 0,
       implementations: [],
-    };
+    }
   }
 
   // Process each implementation
   for (const impl of controlImplementations) {
-    report[impl.controlId].coveragePercent += impl.coverage;
-    report[impl.controlId].implementations.push(impl);
+    report[impl.controlId].coveragePercent += impl.coverage
+    report[impl.controlId].implementations.push(impl)
   }
 
   // Cap coverage at 100%
   for (const controlId in report) {
     if (report[controlId].coveragePercent > 100) {
-      report[controlId].coveragePercent = 100;
+      report[controlId].coveragePercent = 100
     }
   }
 
-  return report;
+  return report
 }
 
 /**
@@ -185,12 +185,10 @@ export function generateComplianceReport(): ComplianceReport {
  * @returns List of controls with coverage below 100%
  */
 export function findComplianceGaps() {
-  const report = generateComplianceReport();
+  const report = generateComplianceReport()
 
   // Return an array of controls with coverage below 100%
-  return Object.values(report).filter(
-    (control) => control.coveragePercent < 100,
-  );
+  return Object.values(report).filter(control => control.coveragePercent < 100)
 }
 
 /**
@@ -203,46 +201,46 @@ export function extractCallerInfo(stack: string) {
   const result = {
     file: undefined,
     line: undefined,
-  };
+  }
 
   try {
-    const stackLines = stack.split("\n");
+    const stackLines = stack.split("\n")
     // Skip Error and internal functions (mapControl)
     // We want to find the actual caller of our API
     if (stackLines.length > 2) {
       // Find the first line that's not from our own module
       for (let i = 1; i < stackLines.length; i++) {
-        const line = stackLines[i].trim();
+        const line = stackLines[i].trim()
         // Skip our own module calls
         if (line.includes("controls.ts")) {
-          continue;
+          continue
         }
 
         // Extract file and line information
-        const match = line.match(/\(([^:)]+)(?::(\d+))?/);
+        const match = line.match(/\(([^:)]+)(?::(\d+))?/)
         if (match) {
-          const lineNumber = match[2] ? parseInt(match[2], 10) : undefined;
-          result.file = match[1];
-          result.line = lineNumber;
+          const lineNumber = match[2] ? parseInt(match[2], 10) : undefined
+          result.file = match[1]
+          result.line = lineNumber
 
-          return result;
+          return result
         }
       }
     }
 
     // Fallback to the first non-Error line if we couldn't find an external caller
     if (stackLines.length > 1) {
-      const callerLine = stackLines[1].trim();
-      const match = callerLine.match(/\(([^:)]+)(?::(\d+))?/);
+      const callerLine = stackLines[1].trim()
+      const match = callerLine.match(/\(([^:)]+)(?::(\d+))?/)
       if (match) {
-        const lineNumber = match[2] ? parseInt(match[2], 10) : undefined;
-        result.file = match[1];
-        result.line = lineNumber;
+        const lineNumber = match[2] ? parseInt(match[2], 10) : undefined
+        result.file = match[1]
+        result.line = lineNumber
       }
     }
   } catch {
     // Do nothing
   }
 
-  return result;
+  return result
 }
