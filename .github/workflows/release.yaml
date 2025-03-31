@@ -45,5 +45,5 @@ jobs:
           npm --no-git-tag-version version ${{ github.ref_name }}
 
           npm run build
-          
+
           PEPR_VERSION=${{ github.ref_name }} npm publish

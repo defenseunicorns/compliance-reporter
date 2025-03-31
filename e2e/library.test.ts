@@ -4,111 +4,110 @@ import {
   findComplianceGaps,
   generateComplianceReport,
   mapControl,
-  registerControls
+  registerControls,
 } from "compliance-reporter";
 describe("compliance-reporter", () => {
   const controls = registerControls({
-      /** Optional jsdoc will show in IDE intellisense */
+    /** Optional jsdoc will show in IDE intellisense */
+    SecurityContext: {
+      id: "AC-1",
+      description: "Prevents Pod Escalation",
+    },
+
+    Storage: {
+      id: "AC-2",
+      description: "Prevents Volume Escalation",
+    },
+
+    ServiceMesh: {
+      id: "NIST-800-53-5",
+      description: "Service Mesh",
+    },
+
+    NetworkPolicy: {
+      id: "NIST-800-53-6",
+      description: "Network Policy",
+    },
+  });
+  const report = generateComplianceReport();
+  const gaps = findComplianceGaps();
+
+  it("should register controls", async () => {
+    expect(controls).toStrictEqual({
       SecurityContext: {
         id: "AC-1",
         description: "Prevents Pod Escalation",
       },
-    
       Storage: {
         id: "AC-2",
         description: "Prevents Volume Escalation",
       },
-    
       ServiceMesh: {
         id: "NIST-800-53-5",
         description: "Service Mesh",
       },
-    
       NetworkPolicy: {
         id: "NIST-800-53-6",
         description: "Network Policy",
       },
     });
-    const report = generateComplianceReport();
-    const gaps = findComplianceGaps();
-
-  it("should register controls", async () => {
-    expect(controls).toStrictEqual({
-      "SecurityContext": {
-        "id": "AC-1",
-        "description": "Prevents Pod Escalation"
-      },
-      "Storage": {
-        "id": "AC-2",
-        "description": "Prevents Volume Escalation"
-      },
-      "ServiceMesh": {
-        "id": "NIST-800-53-5",
-        "description": "Service Mesh"
-      },
-      "NetworkPolicy": {
-        "id": "NIST-800-53-6",
-        "description": "Network Policy"
-      }
-    });
   });
 
   it("should generate a compliance report", () => {
     expect(report).toStrictEqual({
-      'AC-1': {
-        id: 'AC-1',
-        description: 'Prevents Pod Escalation',
+      "AC-1": {
+        id: "AC-1",
+        description: "Prevents Pod Escalation",
         coveragePercent: 0,
-        implementations: []
+        implementations: [],
       },
-      'AC-2': {
-        id: 'AC-2',
-        description: 'Prevents Volume Escalation',
+      "AC-2": {
+        id: "AC-2",
+        description: "Prevents Volume Escalation",
         coveragePercent: 0,
-        implementations: []
+        implementations: [],
       },
-      'NIST-800-53-5': {
-        id: 'NIST-800-53-5',
-        description: 'Service Mesh',
+      "NIST-800-53-5": {
+        id: "NIST-800-53-5",
+        description: "Service Mesh",
         coveragePercent: 0,
-        implementations: []
+        implementations: [],
       },
-      'NIST-800-53-6': {
-        id: 'NIST-800-53-6',
-        description: 'Network Policy',
+      "NIST-800-53-6": {
+        id: "NIST-800-53-6",
+        description: "Network Policy",
         coveragePercent: 0,
-        implementations: []
-      }
+        implementations: [],
+      },
     });
   });
   it("should find compliance gaps", () => {
-    console.log(gaps)
+    console.log(gaps);
     expect(gaps).toStrictEqual([
       {
-        id: 'AC-1',
-        description: 'Prevents Pod Escalation',
+        id: "AC-1",
+        description: "Prevents Pod Escalation",
         coveragePercent: 0,
-        implementations: []
+        implementations: [],
       },
       {
-        id: 'AC-2',
-        description: 'Prevents Volume Escalation',
+        id: "AC-2",
+        description: "Prevents Volume Escalation",
         coveragePercent: 0,
-        implementations: []
+        implementations: [],
       },
       {
-        id: 'NIST-800-53-5',
-        description: 'Service Mesh',
+        id: "NIST-800-53-5",
+        description: "Service Mesh",
         coveragePercent: 0,
-        implementations: []
+        implementations: [],
       },
       {
-        id: 'NIST-800-53-6',
-        description: 'Network Policy',
+        id: "NIST-800-53-6",
+        description: "Network Policy",
         coveragePercent: 0,
-        implementations: []
-      }
+        implementations: [],
+      },
     ]);
   });
- 
 });

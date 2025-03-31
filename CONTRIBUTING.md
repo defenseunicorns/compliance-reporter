@@ -58,14 +58,12 @@ Please follow the coding conventions and style used in the project. Use ESLint a
 - Fix formatting: `npm run format`
 - If regex is used, provide a link to regex101.com with an explanation of the regex pattern.
 
-
 ## Running Tests
 
 ### Run Tests Locally
 
 - Run unit tests: `npm run test:unit`
 - Run e2e tests: `npm run test:e2e`
-
 
 ## Contact
 
