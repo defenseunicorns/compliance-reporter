@@ -34,16 +34,4 @@ jobs:
       - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          #!/bin/bash
-
-          npm install -g npm
-
-          npm ci
-
-          # Set the version to the release version
-          npm --no-git-tag-version version ${{ github.ref_name }}
-
-          npm run build
-
-          PEPR_VERSION=${{ github.ref_name }} npm publish
+        run: ./scripts/publish.sh ${{ github.ref_name }}
