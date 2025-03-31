@@ -3,4 +3,4 @@ export {
   findComplianceGaps,
   mapControl,
   registerControls,
-} from "./controls";
+} from "./controls"

@@ -1,9 +1,9 @@
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "@jest/globals"
 import {
   findComplianceGaps,
   generateComplianceReport,
   registerControls,
-} from "compliance-reporter";
+} from "compliance-reporter"
 describe("compliance-reporter", () => {
   const controls = registerControls({
     /** Optional jsdoc will show in IDE intellisense */
@@ -26,9 +26,9 @@ describe("compliance-reporter", () => {
       id: "NIST-800-53-6",
       description: "Network Policy",
     },
-  });
-  const report = generateComplianceReport();
-  const gaps = findComplianceGaps();
+  })
+  const report = generateComplianceReport()
+  const gaps = findComplianceGaps()
 
   it("should register controls", async () => {
     expect(controls).toStrictEqual({
@@ -48,8 +48,8 @@ describe("compliance-reporter", () => {
         id: "NIST-800-53-6",
         description: "Network Policy",
       },
-    });
-  });
+    })
+  })
 
   it("should generate a compliance report", () => {
     expect(report).toStrictEqual({
@@ -77,8 +77,8 @@ describe("compliance-reporter", () => {
         coveragePercent: 0,
         implementations: [],
       },
-    });
-  });
+    })
+  })
   it("should find compliance gaps", () => {
     expect(gaps).toStrictEqual([
       {
@@ -105,6 +105,6 @@ describe("compliance-reporter", () => {
         coveragePercent: 0,
         implementations: [],
       },
-    ]);
-  });
-});
+    ])
+  })
+})

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-import { analyzeMetafile, build } from "esbuild";
+import { analyzeMetafile, build } from "esbuild"
 
 const buildOpts = {
   bundle: true,
@@ -8,7 +8,7 @@ const buildOpts = {
   legalComments: "eof",
   metafile: true,
   platform: "node",
-};
+}
 
 async function builder() {
   try {
@@ -18,13 +18,13 @@ async function builder() {
       entryPoints: ["src/index.ts"],
       outfile: "dist/index.js",
       sourcemap: true,
-    });
+    })
 
-    console.log(await analyzeMetafile(lib.metafile));
+    console.log(await analyzeMetafile(lib.metafile))
   } catch (e) {
-    console.error(e);
-    process.exit(1);
+    console.error(e)
+    process.exit(1)
   }
 }
 
-builder();
+builder()
