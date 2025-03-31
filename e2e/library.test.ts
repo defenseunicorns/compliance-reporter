@@ -1,11 +1,9 @@
-import { beforeAll, afterAll, describe, it, expect } from "@jest/globals";
-import { execSync } from "node:child_process";
+import { describe, it, expect } from "@jest/globals"
 import {
   findComplianceGaps,
   generateComplianceReport,
-  mapControl,
   registerControls,
-} from "compliance-reporter";
+} from "compliance-reporter"
 describe("compliance-reporter", () => {
   const controls = registerControls({
     /** Optional jsdoc will show in IDE intellisense */
@@ -28,9 +26,9 @@ describe("compliance-reporter", () => {
       id: "NIST-800-53-6",
       description: "Network Policy",
     },
-  });
-  const report = generateComplianceReport();
-  const gaps = findComplianceGaps();
+  })
+  const report = generateComplianceReport()
+  const gaps = findComplianceGaps()
 
   it("should register controls", async () => {
     expect(controls).toStrictEqual({
@@ -50,8 +48,8 @@ describe("compliance-reporter", () => {
         id: "NIST-800-53-6",
         description: "Network Policy",
       },
-    });
-  });
+    })
+  })
 
   it("should generate a compliance report", () => {
     expect(report).toStrictEqual({
@@ -79,10 +77,9 @@ describe("compliance-reporter", () => {
         coveragePercent: 0,
         implementations: [],
       },
-    });
-  });
+    })
+  })
   it("should find compliance gaps", () => {
-    console.log(gaps);
     expect(gaps).toStrictEqual([
       {
         id: "AC-1",
@@ -108,6 +105,6 @@ describe("compliance-reporter", () => {
         coveragePercent: 0,
         implementations: [],
       },
-    ]);
-  });
-});
+    ])
+  })
+})

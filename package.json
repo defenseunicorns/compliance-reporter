@@ -14,8 +14,8 @@
   "version": "0.0.0-development",
   "scripts": {
     "k3d-setup": "k3d cluster delete pepr-dev && k3d cluster create pepr-dev --k3s-arg '--debug@server:0' --wait && kubectl rollout status deployment -n kube-system",
-    "format": "prettier --write .",
-    "lint": "prettier --check . && eslint .",
+    "format:fix": "eslint src --fix && prettier --config .prettierrc src --write",
+    "format:check": "eslint src && prettier --config .prettierrc src --check",
     "test:unit": "jest --testPathIgnorePatterns=e2e/ --coverage",
     "build": "tsc && node build.mjs && npm pack",
     "test:e2e": "npm run build && npm i --no-save compliance-reporter-0.0.0-development.tgz && jest e2e/"

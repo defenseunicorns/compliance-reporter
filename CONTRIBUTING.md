@@ -54,8 +54,8 @@ We take PR reviews seriously and strive to provide a great contributor experienc
 
 Please follow the coding conventions and style used in the project. Use ESLint and Prettier for linting and formatting:
 
-- Check formatting: `npm run lint`
-- Fix formatting: `npm run format`
+- Check formatting: `npm run format:check`
+- Fix formatting: `npm run format:fix`
 - If regex is used, provide a link to regex101.com with an explanation of the regex pattern.
 
 ## Running Tests
