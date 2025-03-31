@@ -1,21 +1,47 @@
-# Pepr Module
+# Compliance Reporter
 
-This is a Pepr Module. [Pepr](https://github.com/defenseunicorns/pepr) is a type-safe Kubernetes middleware system.
+Usage Example:
 
-The `capabilities` directory contains all the capabilities for this module. By default,
-a capability is a single typescript file in the format of `capability-name.ts` that is
-imported in the root `pepr.ts` file as `import { HelloPepr } from "./capabilities/hello-pepr";`.
-Because this is typescript, you can organize this however you choose, e.g. creating a sub-folder
-per-capability or common logic in shared files or folders.
+```ts
+import {
+  mapControl,
+  registerControls,
+  generateComplianceReport,
+  findComplianceGaps,
+} from "compliance-reporter";
 
-Example Structure:
+export const controls = registerControls({
+  /** Optional jsdoc will show in IDE intellisense */
+  SecurityContext: {
+    id: "AC-1",
+    description: "Prevents Pod Escalation",
+  },
 
-```
-Module Root
-├── package.json
-├── pepr.ts
-└── capabilities
-    ├── example-one.ts
-    ├── example-three.ts
-    └── example-two.ts
+  Storage: {
+    id: "AC-2",
+    description: "Prevents Volume Escalation",
+  },
+
+  ServiceMesh: {
+    id: "NIST-800-53-5",
+    description: "Service Mesh",
+  },
+
+  NetworkPolicy: {
+    id: "NIST-800-53-6",
+    description: "Network Policy",
+  },
+});
+
+mapControl(controls.NetworkPolicy, "Implementation details", 75);
+const report = generateComplianceReport();
+const gaps = findComplianceGaps();
+
+// Print the report
+console.log("Report: ");
+console.log(JSON.stringify(report, null, 2));
+
+// Pretty print the matrix for debugging
+console.log("Matrix: ");
+console.log(JSON.stringify(gaps, null, 2));
 ```
