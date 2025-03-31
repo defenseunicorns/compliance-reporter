@@ -1,9 +1,7 @@
-import { beforeAll, afterAll, describe, it, expect } from "@jest/globals";
-import { execSync } from "node:child_process";
+import { describe, it, expect } from "@jest/globals";
 import {
   findComplianceGaps,
   generateComplianceReport,
-  mapControl,
   registerControls,
 } from "compliance-reporter";
 describe("compliance-reporter", () => {
@@ -82,7 +80,6 @@ describe("compliance-reporter", () => {
     });
   });
   it("should find compliance gaps", () => {
-    console.log(gaps);
     expect(gaps).toStrictEqual([
       {
         id: "AC-1",
