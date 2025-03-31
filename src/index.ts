@@ -1,6 +1,6 @@
 export {
-    generateComplianceReport,
-    findComplianceGaps,
-    mapControl,
-    registerControls,
-  } from "./controls"
+  generateComplianceReport,
+  findComplianceGaps,
+  mapControl,
+  registerControls,
+} from "./controls";
