@@ -1,37 +1,48 @@
-name: Version Release
+name: Semantic Release
 
 on:
-  release:
-    types: [published]
-
+  push:
+    branches:
+      - main
 permissions:
   contents: read
 
 jobs:
-  build:
+
+  unit-test:
+    uses: .github/workflows/unit-test.yaml
+
+  e2e-test:
+    uses: .github/workflows/e2e-test.yaml
+
+  release:
+    name: Release
     runs-on: ubuntu-latest
-
+    needs: [unit-test, e2e-test]
     permissions:
-      contents: read
-      packages: write
-      id-token: write
-
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          egress-policy: audit
+          fetch-depth: 0
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Use Node.js 22
+      - name: Setup Node.js
         uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
         with:
-          node-version: 22
-          registry-url: "https://registry.npmjs.org"
-          cache: "npm"
+          node-version: "lts/*"
 
-      - name: Publish to NPM
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: ./scripts/publish.sh ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
