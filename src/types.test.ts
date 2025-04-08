@@ -7,6 +7,7 @@ describe("Types Module", () => {
       const control: Control = {
         id: "TEST-1",
         description: "Test Control",
+        remarks: "Some remarks",
         framework: "Test Framework",
         severity: "High",
       }
@@ -14,6 +15,7 @@ describe("Types Module", () => {
       // Assert
       expect(control.id).toBe("TEST-1")
       expect(control.description).toBe("Test Control")
+      expect(control.remarks).toBe("Some remarks")
       expect(control.framework).toBe("Test Framework")
       expect(control.severity).toBe("High")
     })
@@ -24,10 +26,12 @@ describe("Types Module", () => {
       const control: Control = {
         id: "TEST-1",
         description: "Test Control",
+        remarks: "Some remarks"
       }
 
       expect(control.id).toBeDefined()
       expect(control.description).toBeDefined()
+      expect(control.remarks).toBeDefined()
     })
   })
 

@@ -9,6 +9,9 @@ export type Control = {
   /** Human-readable description of what this control addresses */
   description: string
 
+  /** Human-readable remarks about this control, (e.g., assessment objectives met by the control) */
+  remarks: string
+
   /** Optional fields for additional metadata */
   [key: string]: unknown
 }

@@ -27,10 +27,12 @@ describe("Controls Module", () => {
         SecurityContext: {
           id: "SC-1",
           description: "Security Context Control",
+          remarks: "Security Context Control remarks",
         },
         Storage: {
           id: "SC-2",
           description: "Storage Control",
+          remarks: "Storage Control remarks",
         },
       }
 
@@ -55,10 +57,12 @@ describe("Controls Module", () => {
         SecurityContext1: {
           id: "SC-1",
           description: "Security Context Control 1",
+          remarks: "Security Context Control remarks 1",
         },
         SecurityContext2: {
           id: "SC-1", // Duplicate ID
           description: "Security Context Control 2",
+          remarks: "Security Context Control remarks 2",
         },
       }
 
@@ -73,10 +77,12 @@ describe("Controls Module", () => {
       const control1 = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       const control2 = {
         id: "SC-1", // Same ID
         description: "Another Security Context Control",
+        remarks: "Another Security Context Control remarks",
       }
 
       // Act & Assert
@@ -91,6 +97,7 @@ describe("Controls Module", () => {
       const control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
 
       // Act
@@ -111,10 +118,12 @@ describe("Controls Module", () => {
         {
           id: "SC-1",
           description: "Security Context Control",
+          remarks: "Security Context Control remarks 1", 
         },
         {
           id: "SC-2",
           description: "Storage Control",
+          remarks: "Storage Control remarks 2",
         },
       ]
 
@@ -140,6 +149,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -161,6 +171,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -179,6 +190,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -195,6 +207,7 @@ describe("Controls Module", () => {
       const unregisteredControl: Control = {
         id: "UR-1",
         description: "Unregistered Control",
+        remarks: "Unregistered Control remarks",
       }
 
       // Act & Assert
@@ -209,6 +222,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -227,6 +241,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -244,6 +259,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -283,6 +299,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -312,10 +329,12 @@ describe("Controls Module", () => {
         {
           id: "SC-1",
           description: "Security Context Control",
+          remarks: "Security Context Control remarks",
         },
         {
           id: "NP-1",
           description: "Network Policy Control",
+          remarks: "Network Policy Control remarks",
         },
       )
 
@@ -333,6 +352,7 @@ describe("Controls Module", () => {
       __test__.registeredControls.push({
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       })
 
       // Act
@@ -348,6 +368,7 @@ describe("Controls Module", () => {
       __test__.registeredControls.push({
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
         framework: "NIST",
         severity: "High",
       })
@@ -358,6 +379,7 @@ describe("Controls Module", () => {
       // Assert
       expect(report["SC-1"].id).toBe("SC-1")
       expect(report["SC-1"].description).toBe("Security Context Control")
+      expect(report["SC-1"].remarks).toBe("Security Context Control remarks")
       expect(report["SC-1"].framework).toBe("NIST")
       expect(report["SC-1"].severity).toBe("High")
     })
@@ -369,6 +391,7 @@ describe("Controls Module", () => {
       const control: Control = {
         id: "SC-1",
         description: "Security Context Control",
+        remarks: "Security Context Control remarks",
       }
       __test__.registeredControls.push(control)
 
@@ -392,14 +415,17 @@ describe("Controls Module", () => {
         {
           id: "SC-1",
           description: "Security Context Control",
+          remarks: "Security Context Control remarks",
         },
         {
           id: "NP-1",
           description: "Network Policy Control",
+          remarks: "Network Policy Control remarks",
         },
         {
           id: "PS-1",
           description: "Pod Security Control",
+          remarks: "Pod Security Control remarks",
         },
       )
 
@@ -434,6 +460,7 @@ describe("Controls Module", () => {
       __test__.registeredControls.push({
         id: "NP-1",
         description: "Network Policy Control",
+        remarks: "Network Policy Control remarks",
       })
 
       __test__.controlImplementations.push({
