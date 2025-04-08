@@ -8,12 +8,11 @@ permissions:
   contents: read
 
 jobs:
-
   unit-test:
-    uses: .github/workflows/unit-test.yaml
+    uses: ./.github/workflows/unit-test.yaml@main
 
   e2e-test:
-    uses: .github/workflows/e2e-test.yaml
+    uses: ./.github/workflows/e2e-test.yaml@main
 
   release:
     name: Release
