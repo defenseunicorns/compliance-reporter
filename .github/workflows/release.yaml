@@ -8,12 +8,11 @@ permissions:
   contents: read
 
 jobs:
-
   unit-test:
-    uses: .github/workflows/unit-test.yaml
+    uses: ./.github/workflows/unit-test.yaml
 
   e2e-test:
-    uses: .github/workflows/e2e-test.yaml
+    uses: ./.github/workflows/e2e-test.yaml
 
   release:
     name: Release
@@ -25,8 +24,6 @@ jobs:
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
