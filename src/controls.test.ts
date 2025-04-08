@@ -20,7 +20,7 @@ describe("Controls Module", () => {
     __test__.resetState()
   })
 
-  describe("registerControls", () => {
+  describe("Control Registration", () => {
     it("registers multiple controls as an object", () => {
       // Arrange
       const controlsObj = {
@@ -143,7 +143,7 @@ describe("Controls Module", () => {
     })
   })
 
-  describe("mapControl", () => {
+  describe("Control Implementation Mapping", () => {
     it("maps an implementation with specified coverage", () => {
       // Arrange
       const control: Control = {
@@ -314,7 +314,7 @@ describe("Controls Module", () => {
     })
   })
 
-  describe("generateComplianceReport", () => {
+  describe("Compliance Reporting", () => {
     it("returns an empty report when no controls exist", () => {
       // Act
       const report = generateComplianceReport()
@@ -385,7 +385,7 @@ describe("Controls Module", () => {
     })
   })
 
-  describe("findComplianceGaps", () => {
+  describe("Gap Analysis", () => {
     it("returns an empty array when all controls are implemented", () => {
       // Arrange
       const control: Control = {
