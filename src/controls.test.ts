@@ -14,6 +14,21 @@ jest.spyOn(__test__, "extractCallerInfo").mockImplementation(() => ({
 }))
 
 describe("Controls Module", () => {
+    const defaultControl1 ={
+      id: "SC-1",
+      description: "Security Context Control",
+      remarks: "Security Context Control remarks 1", 
+    }
+    const defaultControl2 = 
+    {
+      id: "SC-2",
+      description: "Storage Control",
+      remarks: "Storage Control remarks 2",
+    }
+  const defaultControls = [
+  defaultControl1,
+  defaultControl2
+  ]
   // Reset state before each test
   beforeEach(() => {
     // Reset the module state
@@ -24,16 +39,8 @@ describe("Controls Module", () => {
     it("registers multiple controls as an object", () => {
       // Arrange
       const controlsObj = {
-        SecurityContext: {
-          id: "SC-1",
-          description: "Security Context Control",
-          remarks: "Security Context Control remarks",
-        },
-        Storage: {
-          id: "SC-2",
-          description: "Storage Control",
-          remarks: "Storage Control remarks",
-        },
+        SecurityContext: defaultControl1,
+        Storage: defaultControl2
       }
 
       // Act
@@ -54,16 +61,8 @@ describe("Controls Module", () => {
     it("rejects registration when control IDs are duplicated within the same input", () => {
       // Arrange
       const duplicateControls = {
-        SecurityContext1: {
-          id: "SC-1",
-          description: "Security Context Control 1",
-          remarks: "Security Context Control remarks 1",
-        },
-        SecurityContext2: {
-          id: "SC-1", // Duplicate ID
-          description: "Security Context Control 2",
-          remarks: "Security Context Control remarks 2",
-        },
+        SecurityContext1: defaultControl1,
+        SecurityContext2: defaultControl1
       }
 
       // Act & Assert
@@ -73,35 +72,16 @@ describe("Controls Module", () => {
     })
 
     it("rejects registration when a control ID conflicts with an existing one", () => {
-      // Arrange
-      const control1 = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
-      const control2 = {
-        id: "SC-1", // Same ID
-        description: "Another Security Context Control",
-        remarks: "Another Security Context Control remarks",
-      }
-
       // Act & Assert
-      registerControls(control1)
-      expect(() => registerControls(control2)).toThrow(
+      registerControls(defaultControl1)
+      expect(() => registerControls(defaultControl1)).toThrow(
         "Control ID SC-1 is already registered",
       )
     })
 
     it("registers a single control as an object", () => {
-      // Arrange
-      const control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
-
       // Act
-      const result = registerControls(control)
+      const result = registerControls(defaultControl1)
 
       // Assert
       expect(__test__.registeredControls).toHaveLength(1)
@@ -113,22 +93,8 @@ describe("Controls Module", () => {
     })
 
     it("registers multiple controls as an array", () => {
-      // Arrange
-      const controls = [
-        {
-          id: "SC-1",
-          description: "Security Context Control",
-          remarks: "Security Context Control remarks 1", 
-        },
-        {
-          id: "SC-2",
-          description: "Storage Control",
-          remarks: "Storage Control remarks 2",
-        },
-      ]
-
       // Act
-      const result = registerControls(controls)
+      const result = registerControls(defaultControls)
 
       // Assert
       expect(__test__.registeredControls).toHaveLength(2)
@@ -146,11 +112,7 @@ describe("Controls Module", () => {
   describe("Control Implementation Mapping", () => {
     it("maps an implementation with specified coverage", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       // Act
@@ -168,11 +130,7 @@ describe("Controls Module", () => {
 
     it("accepts a custom source location for the implementation", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       // Act
@@ -187,11 +145,7 @@ describe("Controls Module", () => {
 
     it("defaults to 100% coverage when no coverage percentage is specified", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       // Act
@@ -219,11 +173,7 @@ describe("Controls Module", () => {
 
     it("accumulates coverage from multiple implementations", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       // Act
@@ -238,11 +188,7 @@ describe("Controls Module", () => {
 
     it("caps total coverage at 100%", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       // Act
@@ -256,11 +202,7 @@ describe("Controls Module", () => {
 
     it("accepts a ControlImplementation object directly", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       const impl: ControlImplementation = {
@@ -296,11 +238,7 @@ describe("Controls Module", () => {
 
     it("uses a default justification when none is provided", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       // Act
@@ -326,11 +264,7 @@ describe("Controls Module", () => {
     it("includes all registered controls with their properties", () => {
       // Arrange
       __test__.registeredControls.push(
-        {
-          id: "SC-1",
-          description: "Security Context Control",
-          remarks: "Security Context Control remarks",
-        },
+        defaultControl1,
         {
           id: "NP-1",
           description: "Network Policy Control",
@@ -349,11 +283,7 @@ describe("Controls Module", () => {
 
     it("shows zero coverage for controls without implementations", () => {
       // Arrange
-      __test__.registeredControls.push({
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      })
+      __test__.registeredControls.push(defaultControl1)
 
       // Act
       const report = generateComplianceReport()
@@ -388,11 +318,7 @@ describe("Controls Module", () => {
   describe("Gap Analysis", () => {
     it("returns an empty array when all controls are implemented", () => {
       // Arrange
-      const control: Control = {
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
-      }
+      const control: Control = defaultControl1
       __test__.registeredControls.push(control)
 
       __test__.controlImplementations.push({
@@ -412,11 +338,7 @@ describe("Controls Module", () => {
     it("identifies controls with incomplete coverage", () => {
       // Arrange
       __test__.registeredControls.push(
-        {
-          id: "SC-1",
-          description: "Security Context Control",
-          remarks: "Security Context Control remarks",
-        },
+        defaultControl1,
         {
           id: "NP-1",
           description: "Network Policy Control",
