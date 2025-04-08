@@ -9,10 +9,10 @@ permissions:
 
 jobs:
   unit-test:
-    uses: ./.github/workflows/unit-test.yaml@main
+    uses: ./.github/workflows/unit-test.yaml
 
   e2e-test:
-    uses: ./.github/workflows/e2e-test.yaml@main
+    uses: ./.github/workflows/e2e-test.yaml
 
   release:
     name: Release
