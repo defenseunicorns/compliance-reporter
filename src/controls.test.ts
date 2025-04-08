@@ -21,7 +21,7 @@ describe("Controls Module", () => {
   })
 
   describe("registerControls", () => {
-    test("should register controls", () => {
+    it("registers multiple controls as an object", () => {
       // Arrange
       const controlsObj = {
         SecurityContext: {
@@ -51,7 +51,7 @@ describe("Controls Module", () => {
       expect(result.Storage.id).toBe("SC-2")
     })
 
-    test("should throw error for duplicate control IDs within provided controls", () => {
+    it("rejects registration when control IDs are duplicated within the same input", () => {
       // Arrange
       const duplicateControls = {
         SecurityContext1: {
@@ -72,7 +72,7 @@ describe("Controls Module", () => {
       )
     })
 
-    test("should throw error when registering a control with an ID that already exists", () => {
+    it("rejects registration when a control ID conflicts with an existing one", () => {
       // Arrange
       const control1 = {
         id: "SC-1",
@@ -92,7 +92,7 @@ describe("Controls Module", () => {
       )
     })
 
-    test("should register a single control", () => {
+    it("registers a single control as an object", () => {
       // Arrange
       const control = {
         id: "SC-1",
@@ -112,7 +112,7 @@ describe("Controls Module", () => {
       expect(result["SC-1"].id).toBe("SC-1")
     })
 
-    test("should register an array of controls", () => {
+    it("registers multiple controls as an array", () => {
       // Arrange
       const controls = [
         {
@@ -144,7 +144,7 @@ describe("Controls Module", () => {
   })
 
   describe("mapControl", () => {
-    test("should map a control implementation successfully", () => {
+    it("maps an implementation with specified coverage", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -166,7 +166,7 @@ describe("Controls Module", () => {
       expect(__test__.controlImplementations[0].source).toMatch(/^.+:\d+$/)
     })
 
-    test("should allow custom source when mapping a control", () => {
+    it("accepts a custom source location for the implementation", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -185,7 +185,7 @@ describe("Controls Module", () => {
       )
     })
 
-    test("should default to 100% coverage when percentage is not provided", () => {
+    it("defaults to 100% coverage when no coverage percentage is specified", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -202,7 +202,7 @@ describe("Controls Module", () => {
       expect(__test__.controlImplementations[0].coverage).toBe(100)
     })
 
-    test("should throw error when mapping a control that is not registered", () => {
+    it("rejects mapping when control ID is not registered", () => {
       // Arrange
       const unregisteredControl: Control = {
         id: "UR-1",
@@ -217,7 +217,7 @@ describe("Controls Module", () => {
       expect(__test__.controlImplementations).toHaveLength(0)
     })
 
-    test("should accumulate coverage from multiple implementations", () => {
+    it("accumulates coverage from multiple implementations", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -236,7 +236,7 @@ describe("Controls Module", () => {
       expect(report["SC-1"].implementations).toHaveLength(2)
     })
 
-    test("should cap total coverage at 100%", () => {
+    it("caps total coverage at 100%", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -254,7 +254,7 @@ describe("Controls Module", () => {
       expect(report["SC-1"].coveragePercent).toBe(100) // 60 + 50 = 110, but capped at 100
     })
 
-    test("should accept a ControlImplementation object directly", () => {
+    it("accepts a ControlImplementation object directly", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -278,7 +278,7 @@ describe("Controls Module", () => {
       expect(__test__.controlImplementations[0]).toEqual(impl)
     })
 
-    test("should throw error when mapping a ControlImplementation with unregistered control ID", () => {
+    it("rejects ControlImplementations with unregistered control ID", () => {
       // Arrange
       const impl: ControlImplementation = {
         controlId: "UR-1", // Unregistered
@@ -294,7 +294,7 @@ describe("Controls Module", () => {
       expect(__test__.controlImplementations).toHaveLength(0)
     })
 
-    test("should provide default justification when none is provided", () => {
+    it("uses a default justification when none is provided", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -315,7 +315,7 @@ describe("Controls Module", () => {
   })
 
   describe("generateComplianceReport", () => {
-    test("should generate an empty report when no controls are registered", () => {
+    it("returns an empty report when no controls exist", () => {
       // Act
       const report = generateComplianceReport()
 
@@ -323,7 +323,7 @@ describe("Controls Module", () => {
       expect(report).toEqual({})
     })
 
-    test("should include all registered controls in the report", () => {
+    it("includes all registered controls with their properties", () => {
       // Arrange
       __test__.registeredControls.push(
         {
@@ -347,7 +347,7 @@ describe("Controls Module", () => {
       expect(report["NP-1"]).toBeDefined()
     })
 
-    test("should show 0% coverage for controls with no implementations", () => {
+    it("shows zero coverage for controls without implementations", () => {
       // Arrange
       __test__.registeredControls.push({
         id: "SC-1",
@@ -363,7 +363,7 @@ describe("Controls Module", () => {
       expect(report["SC-1"].implementations).toEqual([])
     })
 
-    test("should include all control properties in the report", () => {
+    it("includes all control metadata in the report", () => {
       // Arrange
       __test__.registeredControls.push({
         id: "SC-1",
@@ -386,7 +386,7 @@ describe("Controls Module", () => {
   })
 
   describe("findComplianceGaps", () => {
-    test("should return empty array when all controls are fully implemented", () => {
+    it("returns an empty array when all controls are implemented", () => {
       // Arrange
       const control: Control = {
         id: "SC-1",
@@ -409,7 +409,7 @@ describe("Controls Module", () => {
       expect(gaps).toEqual([])
     })
 
-    test("should return controls with less than 100% coverage", () => {
+    it("identifies controls with incomplete coverage", () => {
       // Arrange
       __test__.registeredControls.push(
         {
@@ -455,7 +455,7 @@ describe("Controls Module", () => {
       expect(gaps.map(g => g.id).sort()).toEqual(["NP-1", "PS-1"].sort())
     })
 
-    test("should include coverage percentage in gap results", () => {
+    it("includes coverage percentage in identified gaps", () => {
       // Arrange
       __test__.registeredControls.push({
         id: "NP-1",
