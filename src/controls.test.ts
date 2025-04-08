@@ -14,24 +14,25 @@ jest.spyOn(__test__, "extractCallerInfo").mockImplementation(() => ({
 }))
 
 describe("Controls Module", () => {
-    const defaultControl1 ={
-      id: "SC-1",
-      description: "Security Context Control",
-      remarks: "Security Context Control remarks 1", 
-    }
-    const defaultControl2 = 
-    {
-      id: "SC-2",
-      description: "Storage Control",
-      remarks: "Storage Control remarks 2",
-    }
-  const defaultControls = [
-  defaultControl1,
-  defaultControl2
-  ]
-  // Reset state before each test
+  // Test data generators
+  const createControl = (id: string, prefix = ""): Control => ({
+    id,
+    description: `${prefix}${id} Control`,
+    remarks: `${prefix}${id} Control remarks`,
+  })
+
+  const createControlImplementation = (
+    controlId: string,
+    coverage = 100,
+    source = "test-file.ts:42"
+  ): ControlImplementation => ({
+    controlId,
+    coverage,
+    justification: `Implementation for ${controlId}`,
+    source,
+  })
+
   beforeEach(() => {
-    // Reset the module state
     __test__.resetState()
   })
 
@@ -39,8 +40,8 @@ describe("Controls Module", () => {
     it("registers multiple controls as an object", () => {
       // Arrange
       const controlsObj = {
-        SecurityContext: defaultControl1,
-        Storage: defaultControl2
+        SecurityContext: createControl("SC-1", "Security Context "),
+        Storage: createControl("SC-2", "Storage ")
       }
 
       // Act
@@ -60,48 +61,57 @@ describe("Controls Module", () => {
 
     it("rejects registration when control IDs are duplicated within the same input", () => {
       // Arrange
+      const control = createControl("SC-1")
       const duplicateControls = {
-        SecurityContext1: defaultControl1,
-        SecurityContext2: defaultControl1
+        SecurityContext1: control,
+        SecurityContext2: control
       }
 
       // Act & Assert
       expect(() => registerControls(duplicateControls)).toThrow(
-        "Control ID SC-1 is already registered",
+        "Control ID SC-1 is already registered"
       )
     })
 
     it("rejects registration when a control ID conflicts with an existing one", () => {
+      // Arrange
+      const control = createControl("SC-1")
+      
       // Act & Assert
-      registerControls(defaultControl1)
-      expect(() => registerControls(defaultControl1)).toThrow(
-        "Control ID SC-1 is already registered",
+      registerControls(control)
+      expect(() => registerControls(control)).toThrow(
+        "Control ID SC-1 is already registered"
       )
     })
 
     it("registers a single control as an object", () => {
+      // Arrange
+      const control = createControl("SC-1")
+      
       // Act
-      const result = registerControls(defaultControl1)
+      const result = registerControls(control)
 
       // Assert
       expect(__test__.registeredControls).toHaveLength(1)
       expect(__test__.registeredControls[0].id).toBe("SC-1")
-
-      // Check that the returned object has the ID as key
       expect(result).toHaveProperty("SC-1")
       expect(result["SC-1"].id).toBe("SC-1")
     })
 
     it("registers multiple controls as an array", () => {
+      // Arrange
+      const controls = [
+        createControl("SC-1"),
+        createControl("SC-2")
+      ]
+
       // Act
-      const result = registerControls(defaultControls)
+      const result = registerControls(controls)
 
       // Assert
       expect(__test__.registeredControls).toHaveLength(2)
       expect(__test__.registeredControls[0].id).toBe("SC-1")
       expect(__test__.registeredControls[1].id).toBe("SC-2")
-
-      // Check that the returned object has the IDs as keys
       expect(result).toHaveProperty("SC-1")
       expect(result).toHaveProperty("SC-2")
       expect(result["SC-1"].id).toBe("SC-1")
@@ -112,7 +122,7 @@ describe("Controls Module", () => {
   describe("Control Implementation Mapping", () => {
     it("maps an implementation with specified coverage", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
 
       // Act
@@ -123,14 +133,14 @@ describe("Controls Module", () => {
       expect(__test__.controlImplementations[0].controlId).toBe("SC-1")
       expect(__test__.controlImplementations[0].coverage).toBe(75)
       expect(__test__.controlImplementations[0].justification).toBe(
-        "Implementation details",
+        "Implementation details"
       )
       expect(__test__.controlImplementations[0].source).toMatch(/^.+:\d+$/)
     })
 
     it("accepts a custom source location for the implementation", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
 
       // Act
@@ -138,14 +148,12 @@ describe("Controls Module", () => {
 
       // Assert
       expect(__test__.controlImplementations).toHaveLength(1)
-      expect(__test__.controlImplementations[0].source).toBe(
-        "custom-file.ts:123",
-      )
+      expect(__test__.controlImplementations[0].source).toBe("custom-file.ts:123")
     })
 
     it("defaults to 100% coverage when no coverage percentage is specified", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
 
       // Act
@@ -158,22 +166,18 @@ describe("Controls Module", () => {
 
     it("rejects mapping when control ID is not registered", () => {
       // Arrange
-      const unregisteredControl: Control = {
-        id: "UR-1",
-        description: "Unregistered Control",
-        remarks: "Unregistered Control remarks",
-      }
+      const unregisteredControl = createControl("UR-1")
 
       // Act & Assert
       expect(() =>
-        mapControl(unregisteredControl, "Implementation details"),
+        mapControl(unregisteredControl, "Implementation details")
       ).toThrow("Control ID UR-1 is not registered")
       expect(__test__.controlImplementations).toHaveLength(0)
     })
 
     it("accumulates coverage from multiple implementations", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
 
       // Act
@@ -188,7 +192,7 @@ describe("Controls Module", () => {
 
     it("caps total coverage at 100%", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
 
       // Act
@@ -202,15 +206,9 @@ describe("Controls Module", () => {
 
     it("accepts a ControlImplementation object directly", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
-
-      const impl: ControlImplementation = {
-        controlId: "SC-1",
-        coverage: 75,
-        justification: "Direct implementation",
-        source: "direct-impl.ts:42",
-      }
+      const impl = createControlImplementation("SC-1", 75)
 
       // Act
       mapControl(impl)
@@ -222,23 +220,18 @@ describe("Controls Module", () => {
 
     it("rejects ControlImplementations with unregistered control ID", () => {
       // Arrange
-      const impl: ControlImplementation = {
-        controlId: "UR-1", // Unregistered
-        coverage: 75,
-        justification: "Direct implementation",
-        source: "direct-impl.ts:42",
-      }
+      const impl = createControlImplementation("UR-1")
 
       // Act & Assert
       expect(() => mapControl(impl)).toThrow(
-        "Control ID UR-1 is not registered",
+        "Control ID UR-1 is not registered"
       )
       expect(__test__.controlImplementations).toHaveLength(0)
     })
 
     it("uses a default justification when none is provided", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
 
       // Act
@@ -247,7 +240,7 @@ describe("Controls Module", () => {
       // Assert
       expect(__test__.controlImplementations).toHaveLength(1)
       expect(__test__.controlImplementations[0].justification).toBe(
-        "No justification provided",
+        "No justification provided"
       )
     })
   })
@@ -264,12 +257,8 @@ describe("Controls Module", () => {
     it("includes all registered controls with their properties", () => {
       // Arrange
       __test__.registeredControls.push(
-        defaultControl1,
-        {
-          id: "NP-1",
-          description: "Network Policy Control",
-          remarks: "Network Policy Control remarks",
-        },
+        createControl("SC-1"),
+        createControl("NP-1", "Network Policy ")
       )
 
       // Act
@@ -283,7 +272,7 @@ describe("Controls Module", () => {
 
     it("shows zero coverage for controls without implementations", () => {
       // Arrange
-      __test__.registeredControls.push(defaultControl1)
+      __test__.registeredControls.push(createControl("SC-1"))
 
       // Act
       const report = generateComplianceReport()
@@ -295,21 +284,20 @@ describe("Controls Module", () => {
 
     it("includes all control metadata in the report", () => {
       // Arrange
-      __test__.registeredControls.push({
-        id: "SC-1",
-        description: "Security Context Control",
-        remarks: "Security Context Control remarks",
+      const control = {
+        ...createControl("SC-1"),
         framework: "NIST",
-        severity: "High",
-      })
+        severity: "High"
+      }
+      __test__.registeredControls.push(control)
 
       // Act
       const report = generateComplianceReport()
 
       // Assert
       expect(report["SC-1"].id).toBe("SC-1")
-      expect(report["SC-1"].description).toBe("Security Context Control")
-      expect(report["SC-1"].remarks).toBe("Security Context Control remarks")
+      expect(report["SC-1"].description).toBe("SC-1 Control")
+      expect(report["SC-1"].remarks).toBe("SC-1 Control remarks")
       expect(report["SC-1"].framework).toBe("NIST")
       expect(report["SC-1"].severity).toBe("High")
     })
@@ -318,15 +306,9 @@ describe("Controls Module", () => {
   describe("Gap Analysis", () => {
     it("returns an empty array when all controls are implemented", () => {
       // Arrange
-      const control: Control = defaultControl1
+      const control = createControl("SC-1")
       __test__.registeredControls.push(control)
-
-      __test__.controlImplementations.push({
-        controlId: "SC-1",
-        coverage: 100,
-        justification: "Full implementation",
-        source: "test-file.ts:42",
-      })
+      __test__.controlImplementations.push(createControlImplementation("SC-1"))
 
       // Act
       const gaps = findComplianceGaps()
@@ -338,34 +320,16 @@ describe("Controls Module", () => {
     it("identifies controls with incomplete coverage", () => {
       // Arrange
       __test__.registeredControls.push(
-        defaultControl1,
-        {
-          id: "NP-1",
-          description: "Network Policy Control",
-          remarks: "Network Policy Control remarks",
-        },
-        {
-          id: "PS-1",
-          description: "Pod Security Control",
-          remarks: "Pod Security Control remarks",
-        },
+        createControl("SC-1"),
+        createControl("NP-1", "Network Policy "),
+        createControl("PS-1", "Pod Security ")
       )
 
       // Fully implement one control
-      __test__.controlImplementations.push({
-        controlId: "SC-1",
-        coverage: 100,
-        justification: "Full implementation",
-        source: "test-file.ts:42",
-      })
+      __test__.controlImplementations.push(createControlImplementation("SC-1"))
 
       // Partially implement another
-      __test__.controlImplementations.push({
-        controlId: "NP-1",
-        coverage: 50,
-        justification: "Partial implementation",
-        source: "test-file.ts:42",
-      })
+      __test__.controlImplementations.push(createControlImplementation("NP-1", 50))
 
       // Leave one with no implementation (0%)
 
@@ -379,18 +343,8 @@ describe("Controls Module", () => {
 
     it("includes coverage percentage in identified gaps", () => {
       // Arrange
-      __test__.registeredControls.push({
-        id: "NP-1",
-        description: "Network Policy Control",
-        remarks: "Network Policy Control remarks",
-      })
-
-      __test__.controlImplementations.push({
-        controlId: "NP-1",
-        coverage: 75,
-        justification: "Partial implementation",
-        source: "test-file.ts:42",
-      })
+      __test__.registeredControls.push(createControl("NP-1", "Network Policy "))
+      __test__.controlImplementations.push(createControlImplementation("NP-1", 75))
 
       // Act
       const gaps = findComplianceGaps()
