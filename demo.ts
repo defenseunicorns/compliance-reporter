@@ -1,8 +1,3 @@
-# Compliance Reporter
-
-Usage Example:
-
-```ts
 import {
   mapControl,
   registerControls,
@@ -47,6 +42,3 @@ console.log(JSON.stringify(report, null, 2))
 // Pretty print the matrix for debugging
 console.log("Matrix: ")
 console.log(JSON.stringify(gaps, null, 2))
-```
-
-Execute locally with `npx ts-node demo.ts`
