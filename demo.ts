@@ -3,7 +3,7 @@ import {
   registerControls,
   generateComplianceReport,
   findComplianceGaps,
-} from "compliance-reporter"
+} from "./src/index"
 
 export const controls = registerControls({
   /** Optional jsdoc will show in IDE intellisense */
@@ -15,19 +15,19 @@ export const controls = registerControls({
   Storage: {
     id: "AC-2",
     description: "Prevents Volume Escalation",
-    remarks: "Prevents Volume Escalation remarks"
+    remarks: "Prevents Volume Escalation remarks",
   },
 
   ServiceMesh: {
     id: "NIST-800-53-5",
     description: "Service Mesh",
-    remarks: "Service Mesh remarks"
+    remarks: "Service Mesh remarks",
   },
 
   NetworkPolicy: {
     id: "NIST-800-53-6",
     description: "Network Policy",
-    remarks: "Network Policy remarks"
+    remarks: "Network Policy remarks",
   },
 })
 
