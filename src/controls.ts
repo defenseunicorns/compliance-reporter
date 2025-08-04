@@ -244,3 +244,20 @@ export function extractCallerInfo(stack: string) {
 
   return result
 }
+/**
+ * Restrict Proc Mount in Pods
+ *
+ * The default /proc masks are set up to reduce the attack surface. This policy
+ * ensures nothing but the specified procMount can be used. By default only "Default"
+ * is allowed. Applies to all containers, initContainers, and ephemeralContainers in a Pod.
+ *
+ * @related https://repo1.dso.mil/big-bang/product/packages/kyverno-policies/-/blob/main/chart/templates/restrict-proc-mount.yaml
+ * @mapStart 123e4567-e89b-12d3-a456-426614174001
+ */
+
+function restrictProcMount(): boolean {
+  return true
+}
+/** 
+ * @mapEnd 123e4567-e89b-12d3-a456-426614174001 
+*/
